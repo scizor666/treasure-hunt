@@ -15,6 +15,16 @@ export class MenuScene extends Phaser.Scene {
     this.centered = [];
     this.backdrop = this.add.graphics().setDepth(-1);
 
+    // Tap/click anywhere to start (same pattern as GameOver / Win). Added first
+    // so UI controls sit above it; topOnly lets those take priority.
+    this.input.topOnly = true;
+    this.add
+      .zone(0, 0, this.scale.width, DESIGN_HEIGHT)
+      .setOrigin(0)
+      .setDepth(0)
+      .setInteractive()
+      .once('pointerup', () => this.startGame(true));
+
     this.centered.push(
       this.add
         .text(0, 140, 'Treasure Hunt', {
@@ -44,9 +54,9 @@ export class MenuScene extends Phaser.Scene {
           lineSpacing: 8,
         })
         .setOrigin(0.5),
-      this.makeButton(560, 'Play ▶', () => this.startGame()),
+      this.makeButton(560, 'Play ▶', () => this.startGame(true)),
       this.add
-        .text(0, 660, 'Press Enter, click, or tap Play', {
+        .text(0, 660, 'Press Enter, click, or tap anywhere to play', {
           fontFamily: 'Trebuchet MS, sans-serif',
           fontSize: '18px',
           color: '#8fc7e6',
@@ -55,8 +65,7 @@ export class MenuScene extends Phaser.Scene {
     );
 
     addFullscreenButton(this);
-    this.input.keyboard?.once('keydown-ENTER', () => this.startGame());
-    this.input.keyboard?.once('keydown-SPACE', () => this.startGame());
+    this.input.keyboard?.once('keydown-ENTER', () => this.startGame(false));
 
     this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -76,10 +85,14 @@ export class MenuScene extends Phaser.Scene {
     }
   }
 
-  private startGame(): void {
-    // Go fullscreen on the way in — this runs inside a user gesture (tap/click/
-    // key), which browsers require to allow fullscreen.
-    if (this.scale.fullscreen.available && !this.scale.isFullscreen) {
+  private startGame(requestFullscreen = false): void {
+    // Only enter fullscreen from a tap/click — keyboard shortcuts should start
+    // the game without hijacking the whole screen (Space is also used in-game).
+    if (
+      requestFullscreen &&
+      this.scale.fullscreen.available &&
+      !this.scale.isFullscreen
+    ) {
       try {
         this.scale.startFullscreen();
       } catch {
@@ -104,14 +117,14 @@ export class MenuScene extends Phaser.Scene {
       .text(0, 0, label, { fontFamily: 'Trebuchet MS, sans-serif', fontSize: '30px', color: '#ffffff' })
       .setOrigin(0.5);
 
-    const container = this.add.container(0, y, [g, text]);
+    const container = this.add.container(0, y, [g, text]).setDepth(10);
     container.setSize(w, h).setInteractive(
       new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h),
       Phaser.Geom.Rectangle.Contains,
     );
     container.on('pointerover', () => text.setScale(1.08));
     container.on('pointerout', () => text.setScale(1));
-    container.on('pointerup', onClick);
+    container.on('pointerup', () => onClick());
     return container;
   }
 }
