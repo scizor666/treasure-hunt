@@ -10,7 +10,24 @@ export function asset(path: string): string {
   return `${BASE_URL}${path.replace(/^\/+/, '')}`;
 }
 
-export const VIEWPORT = { width: 1280, height: 720 } as const;
+/**
+ * The internal render height is fixed; the width flexes to match the window's
+ * aspect ratio so the canvas fills the screen with no letterbox bars. Sprites
+ * are designed against this 720-tall space, so they stay a consistent size
+ * across devices while wider screens simply reveal more of the level.
+ */
+export const DESIGN_HEIGHT = 720;
+export const MIN_WIDTH = 960; // ~4:3
+export const MAX_WIDTH = 2600; // ~ultrawide
+
+/** Internal render width for the current window aspect ratio. */
+export function designWidth(winW = window.innerWidth, winH = window.innerHeight): number {
+  const ratio = winH > 0 ? winW / winH : 16 / 9;
+  return Math.round(Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, DESIGN_HEIGHT * ratio)));
+}
+
+// Initial size; the real size is set from the window at boot and on resize.
+export const VIEWPORT = { width: 1280, height: DESIGN_HEIGHT } as const;
 
 export const DEBUG_KEY = 'D';
 

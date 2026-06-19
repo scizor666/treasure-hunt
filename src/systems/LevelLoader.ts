@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { COLORS } from '../config';
+import { COLORS, MAX_WIDTH, DESIGN_HEIGHT } from '../config';
 import type { LevelDefinition, Rect } from '../levels/types';
 
 export interface LoadedLevel {
@@ -28,10 +28,11 @@ export function loadLevel(scene: Phaser.Scene, key: string): LoadedLevel {
 }
 
 function paintBackground(scene: Phaser.Scene, def: LevelDefinition): void {
-  // Base gradient fixed to the camera.
+  // Base gradient fixed to the camera. Oversized in width so it always covers
+  // the viewport at any window aspect ratio (height is the fixed design height).
   const g = scene.add.graphics().setScrollFactor(0).setDepth(-100);
   g.fillGradientStyle(COLORS.bgTop, COLORS.bgTop, COLORS.bgBottom, COLORS.bgBottom, 1);
-  g.fillRect(0, 0, scene.scale.width, scene.scale.height);
+  g.fillRect(0, 0, MAX_WIDTH, DESIGN_HEIGHT);
 
   // Parallax depth bands using tiled seaweed silhouettes.
   const layers = def.parallaxLayers ?? [
@@ -55,8 +56,8 @@ function paintBackground(scene: Phaser.Scene, def: LevelDefinition): void {
   // Ambient drifting bubbles.
   scene.add
     .particles(0, 0, 'bubble', {
-      x: { min: 0, max: scene.scale.width },
-      y: scene.scale.height + 10,
+      x: { min: 0, max: MAX_WIDTH },
+      y: DESIGN_HEIGHT + 10,
       lifespan: 6000,
       speedY: { min: -40, max: -15 },
       scale: { min: 0.2, max: 0.5 },

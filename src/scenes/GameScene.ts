@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { BUBBLE, OCTOPUS, VIEWPORT, DEBUG_KEY } from '../config';
+import { BUBBLE, OCTOPUS, DEBUG_KEY, DESIGN_HEIGHT, MAX_WIDTH } from '../config';
 import { Player } from '../entities/Player';
 import { Bubble } from '../entities/Bubble';
 import { Octopus } from '../entities/Octopus';
@@ -7,6 +7,8 @@ import { Treasure } from '../entities/Treasure';
 import { CombatSystem } from '../systems/CombatSystem';
 import { loadLevel } from '../systems/LevelLoader';
 import { setupCamera } from '../systems/CameraController';
+import { addFullscreenButton } from '../ui/fullscreen';
+import { TouchControls } from '../ui/TouchControls';
 import {
   getRun,
   setRun,
@@ -14,6 +16,9 @@ import {
   LEVEL_COUNT,
 } from '../systems/GameState';
 import type { LevelDefinition } from '../levels/types';
+
+const isTouchDevice = (game: Phaser.Game): boolean =>
+  game.device.input.touch || navigator.maxTouchPoints > 0;
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -27,6 +32,7 @@ export class GameScene extends Phaser.Scene {
   private keys!: Record<string, Phaser.Input.Keyboard.Key>;
   private lastFireAt = 0;
   private pointerFire = false;
+  private touch?: TouchControls;
 
   private playerPos = new Phaser.Math.Vector2();
   private transitioning = false;
@@ -35,6 +41,7 @@ export class GameScene extends Phaser.Scene {
 
   private debug = false;
   private debugGfx!: Phaser.GameObjects.Graphics;
+  private levelNameText!: Phaser.GameObjects.Text;
 
   constructor() {
     super('GameScene');
@@ -95,16 +102,31 @@ export class GameScene extends Phaser.Scene {
 
     // --- Input ---
     this.setupInput();
+    addFullscreenButton(this);
+    if (isTouchDevice(this.game)) {
+      this.touch = new TouchControls(this, { onPause: () => this.togglePause() });
+    }
 
     // --- Debug overlay ---
     this.debugGfx = this.add.graphics().setDepth(2000);
     this.debug = import.meta.env.DEV; // on by default in dev builds
     this.applyDebug();
+
+    // Keep width-anchored UI in place across resize / fullscreen.
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () =>
+      this.scale.off(Phaser.Scale.Events.RESIZE, this.onResize, this),
+    );
+  }
+
+  private onResize(): void {
+    this.cameras.main.setSize(this.scale.width, this.scale.height);
+    this.levelNameText.x = this.scale.width / 2;
   }
 
   private buildHud(): void {
-    this.add
-      .text(VIEWPORT.width / 2, 28, `Level ${getRun(this.registry).levelIndex + 1}: ${this.def.name}`, {
+    this.levelNameText = this.add
+      .text(this.scale.width / 2, 28, `Level ${getRun(this.registry).levelIndex + 1}: ${this.def.name}`, {
         fontFamily: 'Trebuchet MS, sans-serif',
         fontSize: '26px',
         color: '#ffffff',
@@ -130,25 +152,40 @@ export class GameScene extends Phaser.Scene {
       this.applyDebug();
     });
 
-    this.input.on('pointerdown', () => {
-      this.pointerFire = true;
-    });
+    // Desktop mouse click-to-fire (aims at cursor). Implemented as a low-depth
+    // background input zone so that on-screen UI buttons (higher depth) take
+    // the press first via topOnly, and so touch taps are ignored here.
+    this.input.topOnly = true;
+    // Oversized so it always covers the play area at any window aspect.
+    this.add
+      .zone(0, 0, MAX_WIDTH, DESIGN_HEIGHT)
+      .setOrigin(0)
+      .setScrollFactor(0)
+      .setDepth(0)
+      .setInteractive()
+      .on('pointerdown', (p: Phaser.Input.Pointer) => {
+        if (!p.wasTouch) this.pointerFire = true;
+      });
   }
 
   update(time: number, delta: number): void {
     if (this.paused || this.transitioning) return;
 
-    // --- Movement input (normalized) ---
+    // --- Movement input (normalized) — keyboard, or touch joystick if active ---
     const left = this.cursors.left.isDown || this.keys.A.isDown;
     const right = this.cursors.right.isDown || this.keys.D.isDown;
     const up = this.cursors.up.isDown || this.keys.W.isDown;
     const down = this.cursors.down.isDown || this.keys.S.isDown;
-    const ax = (right ? 1 : 0) - (left ? 1 : 0);
-    const ay = (down ? 1 : 0) - (up ? 1 : 0);
+    let ax = (right ? 1 : 0) - (left ? 1 : 0);
+    let ay = (down ? 1 : 0) - (up ? 1 : 0);
+    if (this.touch && this.touch.moveVector.lengthSq() > 0.02) {
+      ax = this.touch.moveVector.x;
+      ay = this.touch.moveVector.y;
+    }
     this.player.move(ax, ay);
 
     // --- Firing ---
-    if (this.keys.SPACE.isDown) this.tryFireKeyboard(time, ax, ay);
+    if (this.keys.SPACE.isDown || this.touch?.firing) this.tryFireKeyboard(time, ax, ay);
     if (this.pointerFire) {
       this.tryFirePointer(time);
       this.pointerFire = false;
@@ -275,10 +312,17 @@ export class GameScene extends Phaser.Scene {
   }
 
   private buildPauseOverlay(): Phaser.GameObjects.Container {
-    const { width, height } = VIEWPORT;
-    const bg = this.add.rectangle(0, 0, width, height, 0x0d2f4a, 0.6).setOrigin(0);
+    const width = this.scale.width;
+    const height = DESIGN_HEIGHT;
+    const bg = this.add
+      .rectangle(0, 0, MAX_WIDTH, height, 0x0d2f4a, 0.6)
+      .setOrigin(0)
+      .setInteractive(); // tap anywhere to resume (touch)
+    bg.on('pointerup', () => {
+      if (this.paused) this.togglePause();
+    });
     const txt = this.add
-      .text(width / 2, height / 2, 'Paused\nPress Esc to resume', {
+      .text(width / 2, height / 2, 'Paused\nTap or press Esc to resume', {
         fontFamily: 'Trebuchet MS, sans-serif',
         fontSize: '40px',
         color: '#ffffff',

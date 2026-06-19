@@ -34,9 +34,16 @@ npm run dev        # http://localhost:5173/treasure-hunt/
 |--------|------|
 | Swim | `←/→/↑/↓` or `WASD` |
 | Shoot bubble | `Space` (facing dir, or up/down if only vertical held) · left-click aims at cursor |
-| Pause | `Esc` (translucent overlay; `Esc` again to resume) |
-| Restart (game over / win) | `Enter` or `R` |
+| Pause | `Esc` (translucent overlay; `Esc`/tap to resume) |
+| Restart (game over / win) | `Enter`, `R`, or tap |
+| Fullscreen | `F` or the ⛶ button (top-right); also enters on Play |
 | Toggle debug overlay | `D` (detection ellipses + ambush trigger zones; on by default in `dev`) |
+
+**Touch / tablet:** on touch devices the game shows an on-screen left-side
+virtual joystick (swim), a right-side bubble button (shoot), and a pause
+button. The canvas fills the screen at any aspect ratio (fixed 720-tall design
+space; wider screens reveal more of the level), and tapping Play enters
+fullscreen.
 
 You start with **4 hearts**. Each octopus bite costs one, with 1.5 s of
 invulnerability after a hit. Clearing octopuses is optional — only the treasure

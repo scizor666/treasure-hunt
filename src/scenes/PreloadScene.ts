@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { asset, VIEWPORT, COLORS } from '../config';
+import { asset, COLORS } from '../config';
 import { LEVEL_KEYS } from '../systems/GameState';
 import { FISH_FRAME } from '../generated/fishFrames';
 
@@ -58,7 +58,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   private drawProgressBar(): void {
-    const { width, height } = VIEWPORT;
+    const { width, height } = this.scale;
     const barW = 420;
     const barH = 28;
     const x = (width - barW) / 2;

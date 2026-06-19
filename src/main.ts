@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { registerSW } from 'virtual:pwa-register';
-import { VIEWPORT } from './config';
+import { DESIGN_HEIGHT, designWidth } from './config';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { MenuScene } from './scenes/MenuScene';
@@ -10,8 +10,8 @@ import { WinScene } from './scenes/WinScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: VIEWPORT.width,
-  height: VIEWPORT.height,
+  width: designWidth(),
+  height: DESIGN_HEIGHT,
   parent: 'game-container',
   backgroundColor: '#1a4a6e',
   physics: {
@@ -22,6 +22,7 @@ const config: Phaser.Types.Core.GameConfig = {
     },
   },
   scale: {
+    // FIT scales the (aspect-matched) canvas to fill the window with no bars.
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
@@ -32,7 +33,20 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: [BootScene, PreloadScene, MenuScene, GameScene, GameOverScene, WinScene],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+// Keep the internal width matched to the window aspect (height stays 720) so
+// there's never a letterbox, including across fullscreen and orientation.
+function matchAspect(): void {
+  const w = designWidth();
+  if (Math.abs(game.scale.width - w) > 1 || game.scale.height !== DESIGN_HEIGHT) {
+    game.scale.setGameSize(w, DESIGN_HEIGHT);
+  }
+}
+window.addEventListener('resize', matchAspect);
+window.addEventListener('orientationchange', matchAspect);
+game.scale.on(Phaser.Scale.Events.ENTER_FULLSCREEN, matchAspect);
+game.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, matchAspect);
 
 if (import.meta.env.PROD) {
   registerSW({ immediate: true });
