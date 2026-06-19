@@ -14,8 +14,10 @@ const pngPublic = resolve(root, 'public/assets/png');
 const iconsDir = resolve(root, 'public/icons');
 const publicDir = resolve(root, 'public');
 
+// NOTE: 'rainbow-fish' is intentionally excluded — the player sprite is a swim
+// spritesheet built from the painted source by scripts/process-fish.mjs.
 const sprites = [
-  'rainbow-fish', 'octopus', 'shell', 'star', 'bubble',
+  'octopus', 'shell', 'star', 'bubble',
   'heart-full', 'heart-empty', 'coral', 'rock', 'seaweed', 'sparkle',
 ];
 

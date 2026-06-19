@@ -13,7 +13,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   invulnerableUntil = 0;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, 'fish');
+    super(scene, x, y, 'fish', 0);
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -38,6 +38,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (ax > 0) this.setFacing(1);
     else if (ax < 0) this.setFacing(-1);
+
+    // Wobble the tail only while swimming; rest on the neutral frame when idle.
+    if (len > 0) {
+      if (this.anims.currentAnim?.key !== 'fish-swim' || !this.anims.isPlaying) {
+        this.play('fish-swim');
+      }
+    } else if (this.anims.isPlaying) {
+      this.anims.stop();
+      this.setFrame(0);
+    }
   }
 
   /** Public so GameScene can align facing to the mouse aim direction. */

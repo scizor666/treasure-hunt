@@ -21,7 +21,7 @@ export class MenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.add.image(width / 2, 250, 'fish').setScale(1.6);
+    this.add.image(width / 2, 250, 'fish', 0).setScale(1.4);
 
     const instructions =
       'Swim with arrow keys or WASD. Press Space to shoot bubbles at\n' +

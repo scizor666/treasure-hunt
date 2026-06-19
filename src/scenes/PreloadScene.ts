@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { asset, VIEWPORT, COLORS } from '../config';
 import { LEVEL_KEYS } from '../systems/GameState';
+import { FISH_FRAME } from '../generated/fishFrames';
 
 /**
  * Loads vectorized PNG sprites, level JSON, and audio. Shows a progress bar.
@@ -14,8 +15,12 @@ export class PreloadScene extends Phaser.Scene {
   preload(): void {
     this.drawProgressBar();
 
-    // Sprites (vectorized from references — see assets/svg).
-    this.load.image('fish', asset('assets/png/rainbow-fish.png'));
+    // Rainbow Fish swim spritesheet (see scripts/process-fish.mjs).
+    this.load.spritesheet('fish', asset('assets/png/rainbow-fish.png'), {
+      frameWidth: FISH_FRAME.width,
+      frameHeight: FISH_FRAME.height,
+    });
+    // Other sprites (vectorized from references — see assets/svg).
     this.load.image('octopus', asset('assets/png/octopus.png'));
     this.load.image('shell', asset('assets/png/shell.png'));
     this.load.image('star', asset('assets/png/star.png'));
@@ -42,6 +47,13 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create(): void {
+    // Tail-wobble swim cycle (frames bend the rear tail). (§7.4)
+    this.anims.create({
+      key: 'fish-swim',
+      frames: this.anims.generateFrameNumbers('fish', { start: 0, end: FISH_FRAME.count - 1 }),
+      frameRate: 8,
+      repeat: -1,
+    });
     this.scene.start('MenuScene');
   }
 
