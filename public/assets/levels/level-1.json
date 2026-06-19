@@ -1,0 +1,53 @@
+{
+  "id": "level-1",
+  "name": "Shell Cove",
+  "width": 4800,
+  "height": 720,
+  "playerSpawn": { "x": 120, "y": 360 },
+  "treasure": { "type": "shell", "x": 4650, "y": 360 },
+  "calmBeforeTreasure": 300,
+  "walls": [
+    { "x": 0, "y": 0, "width": 4800, "height": 32 },
+    { "x": 0, "y": 686, "width": 4800, "height": 34 },
+    { "x": 1330, "y": 32, "width": 130, "height": 150 },
+    { "x": 1850, "y": 506, "width": 120, "height": 180 },
+    { "x": 2850, "y": 32, "width": 130, "height": 240 },
+    { "x": 2850, "y": 470, "width": 130, "height": 216 },
+    { "x": 4330, "y": 32, "width": 110, "height": 170 },
+    { "x": 4330, "y": 520, "width": 110, "height": 166 }
+  ],
+  "octopuses": [
+    {
+      "x": 900, "y": 340, "pattern": "patrol",
+      "waypoints": [ { "x": 820, "y": 300 }, { "x": 1000, "y": 420 }, { "x": 900, "y": 250 } ]
+    },
+    {
+      "x": 1430, "y": 300, "pattern": "ambush", "hiddenUntilTrigger": true,
+      "trigger": { "x": 1250, "y": 200, "width": 150, "height": 380 },
+      "waypoints": [ { "x": 1430, "y": 300 }, { "x": 1490, "y": 380 } ]
+    },
+    {
+      "x": 1900, "y": 180, "pattern": "patrol",
+      "waypoints": [ { "x": 1900, "y": 110 }, { "x": 1900, "y": 430 } ]
+    },
+    {
+      "x": 2400, "y": 360, "pattern": "drop-in",
+      "trigger": { "x": 2240, "y": 110, "width": 130, "height": 500 },
+      "waypoints": [ { "x": 2360, "y": 340 }, { "x": 2450, "y": 390 } ]
+    },
+    {
+      "x": 2910, "y": 190, "pattern": "ambush", "hiddenUntilTrigger": true,
+      "trigger": { "x": 2740, "y": 120, "width": 150, "height": 430 },
+      "waypoints": [ { "x": 2910, "y": 190 }, { "x": 2960, "y": 300 } ]
+    },
+    {
+      "x": 3500, "y": 540, "pattern": "surge-up",
+      "trigger": { "x": 3330, "y": 260, "width": 160, "height": 420 },
+      "waypoints": [ { "x": 3460, "y": 540 }, { "x": 3560, "y": 510 } ]
+    },
+    {
+      "x": 4380, "y": 360, "pattern": "patrol",
+      "waypoints": [ { "x": 4380, "y": 250 }, { "x": 4380, "y": 470 } ]
+    }
+  ]
+}

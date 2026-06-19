@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Rock / floor-ceiling tile -->
+  <rect width="32" height="32" fill="#3c4b5c"/>
+  <g stroke="#2b3744" stroke-width="1.5" fill="none">
+    <path d="M0,12 L10,10 L18,14 L32,11"/>
+    <path d="M0,22 L8,20 L16,24 L24,21 L32,24"/>
+    <path d="M12,0 L10,10 M18,14 L20,22 M24,21 L26,32"/>
+  </g>
+  <g fill="#4a5b6e">
+    <circle cx="6" cy="6" r="2"/><circle cx="26" cy="17" r="2"/><circle cx="14" cy="28" r="2"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
+  <!-- Teal five-point starfish (§7.2) -->
+  <path d="M22,2
+           C24,12 26,15 33,18
+           C40,20 41,21 41,22
+           C41,23 35,26 31,31
+           C28,37 27,40 26,41
+           C24,41 23,34 22,30
+           C21,34 20,41 18,41
+           C17,40 16,37 13,31
+           C9,26 3,23 3,22
+           C3,21 4,20 11,18
+           C18,15 20,12 22,2 Z"
+        fill="#4ECDC4" stroke="#2D2D2D" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- center + ridge dots -->
+  <circle cx="22" cy="23" r="2.2" fill="#3AB5AD"/>
+  <g fill="#FFFFFF" opacity="0.6">
+    <circle cx="22" cy="12" r="1"/><circle cx="31" cy="24" r="1"/>
+    <circle cx="26" cy="34" r="1"/><circle cx="17" cy="34" r="1"/><circle cx="12" cy="24" r="1"/>
+  </g>
+</svg>

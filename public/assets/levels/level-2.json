@@ -1,0 +1,64 @@
+{
+  "id": "level-2",
+  "name": "Star Reef",
+  "width": 6400,
+  "height": 720,
+  "playerSpawn": { "x": 120, "y": 360 },
+  "treasure": { "type": "star", "x": 6250, "y": 200 },
+  "calmBeforeTreasure": 300,
+  "walls": [
+    { "x": 0, "y": 0, "width": 6400, "height": 32 },
+    { "x": 0, "y": 686, "width": 6400, "height": 34 },
+    { "x": 1150, "y": 32, "width": 120, "height": 210 },
+    { "x": 1150, "y": 520, "width": 120, "height": 166 },
+    { "x": 2060, "y": 32, "width": 130, "height": 240 },
+    { "x": 3350, "y": 32, "width": 120, "height": 230 },
+    { "x": 3350, "y": 470, "width": 120, "height": 216 },
+    { "x": 4760, "y": 32, "width": 140, "height": 150 },
+    { "x": 4760, "y": 470, "width": 140, "height": 216 },
+    { "x": 5910, "y": 470, "width": 140, "height": 216 }
+  ],
+  "octopuses": [
+    {
+      "x": 720, "y": 260, "pattern": "ambush", "hiddenUntilTrigger": true,
+      "trigger": { "x": 560, "y": 150, "width": 150, "height": 430 },
+      "waypoints": [ { "x": 720, "y": 260 }, { "x": 780, "y": 350 } ]
+    },
+    {
+      "x": 1210, "y": 540, "pattern": "surge-up",
+      "trigger": { "x": 1050, "y": 250, "width": 150, "height": 420 },
+      "waypoints": [ { "x": 1210, "y": 360 }, { "x": 1210, "y": 540 } ]
+    },
+    {
+      "x": 1700, "y": 340, "pattern": "patrol",
+      "waypoints": [ { "x": 1620, "y": 300 }, { "x": 1790, "y": 430 }, { "x": 1700, "y": 250 } ]
+    },
+    {
+      "x": 2120, "y": 210, "pattern": "ambush", "hiddenUntilTrigger": true,
+      "trigger": { "x": 1950, "y": 130, "width": 150, "height": 430 },
+      "waypoints": [ { "x": 2120, "y": 210 }, { "x": 2170, "y": 320 } ]
+    },
+    {
+      "x": 2700, "y": 360, "pattern": "drop-in",
+      "trigger": { "x": 2540, "y": 110, "width": 130, "height": 510 },
+      "waypoints": [ { "x": 2660, "y": 340 }, { "x": 2750, "y": 390 } ]
+    },
+    {
+      "x": 3300, "y": 300, "pattern": "patrol",
+      "waypoints": [ { "x": 3260, "y": 250 }, { "x": 3360, "y": 430 } ]
+    },
+    {
+      "x": 3520, "y": 420, "pattern": "patrol",
+      "waypoints": [ { "x": 3470, "y": 300 }, { "x": 3580, "y": 470 } ]
+    },
+    {
+      "x": 4420, "y": 360, "pattern": "ambush", "hiddenUntilTrigger": true,
+      "trigger": { "x": 4250, "y": 150, "width": 150, "height": 430 },
+      "waypoints": [ { "x": 4420, "y": 360 }, { "x": 4470, "y": 290 } ]
+    },
+    {
+      "x": 5950, "y": 280, "pattern": "patrol",
+      "waypoints": [ { "x": 5950, "y": 180 }, { "x": 5950, "y": 430 } ]
+    }
+  ]
+}

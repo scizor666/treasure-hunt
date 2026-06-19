@@ -1,0 +1,25 @@
+{
+  "name": "treasure-hunt",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Help Rainbow Fish find treasures and dodge Mad Octopuses!",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview --port 4173",
+    "typecheck": "tsc --noEmit",
+    "gen:art": "node scripts/rasterize.mjs",
+    "gen:audio": "node scripts/gen-audio.mjs"
+  },
+  "dependencies": {
+    "phaser": "^3.80.1"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.43.1",
+    "sharp": "^0.35.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.10",
+    "vite-plugin-pwa": "^0.20.5"
+  }
+}

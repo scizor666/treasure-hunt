@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/alex/Downloads/**)",
+      "Bash(npm -v)",
+      "Bash(git -C /home/alex/projects/treasure-hunt rev-parse --is-inside-work-tree)"
+    ]
+  }
+}

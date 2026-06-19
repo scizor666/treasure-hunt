@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="220" viewBox="0 0 120 220">
+  <!-- Parallax seaweed silhouette band (tiled). White so it can be tinted. -->
+  <g fill="#FFFFFF">
+    <path d="M14,220 C6,160 22,150 12,90 C24,140 30,150 22,220 Z"/>
+    <path d="M40,220 C34,140 48,120 38,60 C52,120 56,150 50,220 Z"/>
+    <path d="M70,220 C64,170 78,150 70,100 C84,150 86,170 80,220 Z"/>
+    <path d="M98,220 C92,150 104,130 96,70 C110,130 112,160 108,220 Z"/>
+  </g>
+</svg>
